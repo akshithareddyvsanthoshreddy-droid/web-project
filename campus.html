@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Campus Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+    }
+    #chat {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #ecf0f1;
+    }
+    .msg {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    .user {
+      background: #27ae60;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+    .bot {
+      background: #3498db;
+      color: white;
+      margin-right: auto;
+      text-align: left;
+    }
+    #inputArea {
+      display: flex;
+      padding: 10px;
+      background: #bdc3c7;
+    }
+    #inputBox {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    #sendBtn {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #2c3e50;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #sendBtn:hover {
+      background: #1a252f;
+    }
+  </style>
+</head>
+<body>
+  <header>Smart Campus Assistant 🤖</header>
+
+  <div id="chat"></div>
+
+  <div id="inputArea">
+    <input id="inputBox" type="text" placeholder="Ask me about library, dining, buses..." />
+    <button id="sendBtn">Ask</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const inputBox = document.getElementById("inputBox");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function addMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.className = "msg " + sender;
+      msg.textContent = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function getBotReply(question) {
+      // Simple FAQ replies (you can expand)
+      const faqs = {
+        "library timings": "📚 Library is open Mon–Fri 8am–10pm, Sat–Sun 9am–6pm.",
+        "cafeteria hours": "☕ Cafeteria is open daily from 8am–8pm.",
+        "bus timings": "🚌 Buses leave at 8:00, 9:30, 12:30, 15:00, and 18:00.",
+        "sports facilities": "⚽ Sports complex includes football, basketball, gym, and swimming pool.",
+        "administrative office hours": "🏢 Admin office works Mon–Fri, 9am–5pm."
+        "campus event": " upcoming event:tech fest(oct 15),cultural  fest(nov 20)"
+      };
+
+      question = question.toLowerCase();
+      for (let key in faqs) {
+        if (question.includes(key)) return faqs[key];
+      }
+      return "🤔 Sorry, I don’t know that. Try asking about library, cafeteria, buses, sports, or admin.";
+    }
+
+    function sendMessage() {
+      const text = inputBox.value.trim();
+      if (!text) return;
+
+      addMessage("user", text);
+      inputBox.value = "";
+
+      setTimeout(() => {
+        const reply = getBotReply(text);
+        addMessage("bot", reply);
+      }, 500);
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    inputBox.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
+
+</body>
+</html>

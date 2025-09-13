@@ -1,0 +1,90 @@
+
+
+   
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Wellness Monitor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f6f9; margin:0; padding:0; }
+    header { background:#2c3e50; color:white; padding:15px; text-align:center; }
+    section { padding:20px; }
+    .mood-btn { padding:10px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; }
+    .happy { background:#2ecc71; color:white; }
+    .neutral { background:#f1c40f; color:white; }
+    .sad { background:#e74c3c; color:white; }
+    #history { margin-top:20px; background:white; padding:10px; border-radius:5px; }
+    canvas { max-width:100%; margin-top:20px; }
+  </style>
+</head>
+<body>
+  <header>🧠 Student Wellness Monitor</header>
+  <section>
+    <h3>How are you feeling today?</h3>
+    <button class="mood-btn happy" onclick="logMood('happy')">😊 Happy</button>
+    <button class="mood-btn neutral" onclick="logMood('neutral')">😐 Neutral</button>
+    <button class="mood-btn sad" onclick="logMood('sad')">😔 Sad</button>
+
+    <div id="recommendation"></div>
+
+    <div id="history">
+      <h3>📅 Mood History</h3>
+      <ul id="moodList"></ul>
+    </div>
+    <canvas id="trendChart"></canvas>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const moodList = document.getElementById("moodList");
+    const recommendation = document.getElementById("recommendation");
+    let moods = JSON.parse(localStorage.getItem("moods") || "[]");
+
+    function logMood(mood) {
+      const today = new Date().toLocaleDateString();
+      moods.push({date: today, mood});
+      localStorage.setItem("moods", JSON.stringify(moods));
+      showMoods();
+      giveRecommendation(mood);
+      drawChart();
+    }
+
+    function showMoods() {
+      moodList.innerHTML = "";
+      moods.forEach(entry => {
+        let li = document.createElement("li");
+        li.textContent = entry.date + " → " + entry.mood;
+        moodList.appendChild(li);
+      });
+    }
+
+    function giveRecommendation(mood) {
+      if (mood === "happy") recommendation.textContent = "🌟 Keep it up! Stay positive and spread joy.";
+      else if (mood === "neutral") recommendation.textContent = "☕ Take a short walk or chat with a friend to lift your mood.";
+      else recommendation.textContent = "💙 Consider deep breathing, journaling, or reaching out to someone you trust.";
+    }
+
+    function drawChart() {
+      const ctx = document.getElementById("trendChart").getContext("2d");
+      const counts = {happy:0, neutral:0, sad:0};
+      moods.forEach(m => counts[m.mood]++);
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Happy","Neutral","Sad"],
+          datasets: [{
+            label: "Mood Count",
+            data: [counts.happy, counts.neutral, counts.sad],
+            backgroundColor: ["#2ecc71","#f1c40f","#e74c3c"]
+          }]
+        }
+      });
+    }
+
+    showMoods();
+    drawChart();
+  </script>
+</body>
+</html>
